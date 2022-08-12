@@ -1,7 +1,7 @@
 export default function createMarkup(pageUrl) {
   const markup = pageUrl.data.hits
     .map(picture => {
-      return `<div class="photo-card">
+      return `<a class="photo-card" href="${picture.largeImageURL}">
   <img src="${picture.webformatURL}" alt="${picture.tags}" loading="lazy" />
   <div class="info">
     <p class="info-item">
@@ -21,7 +21,7 @@ export default function createMarkup(pageUrl) {
       ${picture.downloads}
     </p>
   </div>
-</div>`;
+</a>`;
     })
     .join('');
   return markup;

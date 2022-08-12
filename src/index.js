@@ -1,18 +1,24 @@
 import Notiflix from 'notiflix';
 import FetchUrl from './pixabay';
 import createMarkup from './markup';
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
 
 const { form, gallery, loadMore } = {
   form: document.querySelector('.search-form'),
   gallery: document.querySelector('.gallery'),
   loadMore: document.querySelector('.load-more'),
 };
-
 let addSucsess = true;
-
 const fetchUrl = new FetchUrl();
 
 form.addEventListener('submit', onSearch);
+loadMore.addEventListener('click', onLoadMore);
+
+var lightbox = new SimpleLightbox('.gallery a', {
+  captionsData: 'alt',
+  captionDelay: 250,
+});
 
 async function onSearch(e) {
   e.preventDefault();
@@ -22,10 +28,10 @@ async function onSearch(e) {
     clearPage();
     fetchUrl.resetPage();
     await showMarkup();
+    lightbox.refresh();
   }
 }
 
-loadMore.addEventListener('click', onLoadMore);
 async function onLoadMore() {
   await showMarkup();
 }
