@@ -1,5 +1,5 @@
-export default function createMarkup(search) {
-  const markup = search.data.hits
+export default function createMarkup(pageUrl) {
+  const markup = pageUrl
     .map(picture => {
       return `<div class="photo-card">
   <img src="${picture.webformatURL}" alt="${picture.tags}" loading="lazy" />
@@ -21,7 +21,8 @@ export default function createMarkup(search) {
       ${picture.downloads}
     </p>
   </div>
-</div>;`;
+</div>`;
     })
     .join('');
+  return markup;
 }

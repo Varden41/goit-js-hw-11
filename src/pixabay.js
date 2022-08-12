@@ -6,7 +6,6 @@ export default class FetchUrl {
     this.page = 1;
   }
   async fetchPictures() {
-    console.log(this);
     try {
       const searchParams = new URLSearchParams({
         key: '29198064-00b99288cfca6b99747869826',
@@ -19,8 +18,10 @@ export default class FetchUrl {
       });
       const BASE_URL = 'https://pixabay.com/api/';
       const search = await axios.get(`${BASE_URL}/?${searchParams}`);
+      const pictures = search.data.hits;
+
       this.incrementPage();
-      return search;
+      return pictures;
     } catch (error) {
       throw new Error(error);
     }

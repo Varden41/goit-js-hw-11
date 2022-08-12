@@ -1,6 +1,5 @@
 import Notiflix from 'notiflix';
 import FetchUrl from './pixabay';
-import axios from 'axios';
 import createMarkup from './markup';
 
 const { form, input, gallery, loadMore } = {
@@ -18,10 +17,16 @@ async function onSearch(e) {
   e.preventDefault();
   fetchUrl.query = e.currentTarget.elements.searchQuery.value;
   fetchUrl.resetPage();
-  fetchUrl.fetchPictures();
+  const pageUrl = await fetchUrl.fetchPictures();
+  const pageMarkup = appendPictureMarkup(pageUrl);
 }
 // button.addEventListener('click', onLoadMore);
 loadMore.addEventListener('click', onLoadMore);
-function onLoadMore() {
-  fetchUrl.fetchPictures();
+async function onLoadMore() {
+  const pageUrl = await fetchUrl.fetchPictures();
+  const pageMarkup = appendPictureMarkup(pageUrl);
+}
+
+function appendPictureMarkup(pageUrl) {
+  gallery.insertAdjacentHTML('beforeend', createMarkup(pageUrl));
 }
