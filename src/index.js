@@ -17,10 +17,13 @@ async function onSearch(e) {
   e.preventDefault();
   fetchUrl.query = e.currentTarget.elements.searchQuery.value;
   fetchUrl.resetPage();
-  const pageUrl = await fetchUrl.fetchPictures();
-  const pageMarkup = appendPictureMarkup(pageUrl);
+  try {
+    const pageUrl = await fetchUrl.fetchPictures();
+    console.log(pageUrl);
+    const pageMarkup = appendPictureMarkup(pageUrl);
+  } catch (error) {}
 }
-// button.addEventListener('click', onLoadMore);
+
 loadMore.addEventListener('click', onLoadMore);
 async function onLoadMore() {
   const pageUrl = await fetchUrl.fetchPictures();
