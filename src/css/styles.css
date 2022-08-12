@@ -26,6 +26,8 @@ button {
 
 .gallery {
     display: flex;
+    flex-grow: 1;
+    justify-content: center;
 
     flex-wrap: wrap;
     gap: 10px;
@@ -43,6 +45,7 @@ button {
     height: auto;
     font-size: 10px;
     border: solid 1px teal;
+    border-radius: 4px;
 }
 
 img {

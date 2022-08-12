@@ -18,10 +18,10 @@ export default class FetchUrl {
       });
       const BASE_URL = 'https://pixabay.com/api/';
       const search = await axios.get(`${BASE_URL}/?${searchParams}`);
-      const pictures = search.data.hits;
+      console.log(search);
 
       this.incrementPage();
-      return pictures;
+      return search;
     } catch (error) {
       throw new Error(error);
     }
