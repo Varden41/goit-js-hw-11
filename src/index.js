@@ -2,6 +2,7 @@ import Notiflix from 'notiflix';
 import FetchUrl from './pixabay';
 import createMarkup from './markup';
 import SimpleLightbox from 'simplelightbox';
+import { debounce } from 'lodash';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
 const { form, gallery, loadMore } = {
@@ -12,8 +13,20 @@ const { form, gallery, loadMore } = {
 let addSucsess = true;
 const fetchUrl = new FetchUrl();
 
+// smooth scroll
+function smoothScroll() {
+  const { height: cardHeight } = document
+    .querySelector('.formWrapper')
+    .getBoundingClientRect();
+
+  window.scrollBy({
+    top: cardHeight * 1.5,
+    behavior: 'smooth',
+  });
+}
+
 form.addEventListener('submit', onSearch);
-loadMore.addEventListener('click', onLoadMore);
+// loadMore.addEventListener('click', onLoadMore);
 
 var lightbox = new SimpleLightbox('.gallery a', {
   captionsData: 'alt',
@@ -22,6 +35,7 @@ var lightbox = new SimpleLightbox('.gallery a', {
 
 async function onSearch(e) {
   e.preventDefault();
+  document.addEventListener('scroll', debounce(onScroll, 200));
   addSucsess = true;
   fetchUrl.query = e.currentTarget.elements.searchQuery.value.trim();
   if (fetchUrl.query) {
@@ -29,12 +43,22 @@ async function onSearch(e) {
     fetchUrl.resetPage();
     await showMarkup();
     lightbox.refresh();
+    smoothScroll();
   }
 }
 
-async function onLoadMore() {
-  await showMarkup();
+async function onScroll() {
+  if (
+    window.innerHeight + window.pageYOffset >=
+    document.body.offsetHeight - 5
+  ) {
+    await showMarkup();
+  }
 }
+
+// async function onLoadMore() {
+//   await showMarkup();
+// }
 
 function appendPictureMarkup(pageUrl) {
   gallery.insertAdjacentHTML('beforeend', createMarkup(pageUrl));
@@ -45,6 +69,7 @@ function clearPage() {
 async function showMarkup() {
   try {
     const pageUrl = await fetchUrl.fetchPictures();
+    console.log(fetchUrl.page);
     const nots = notification(pageUrl);
     const pageMarkup = appendPictureMarkup(pageUrl);
   } catch (error) {
@@ -55,15 +80,16 @@ async function showMarkup() {
 // notification
 
 function notification(pageUrl) {
-  if (pageUrl.data.hits.length === 0) {
+  if (pageUrl.data.hits.length === 0 && fetchUrl.page === 2) {
     return Notiflix.Notify.failure(
       'Sorry, there are no images matching your search query. Please try again.'
     );
   } else if (pageUrl.data.hits.length < 40) {
-    Notiflix.Notify.info(
+    return Notiflix.Notify.info(
       `We're sorry, but you've reached the end of search results.`
     );
   } else if (pageUrl.data.hits.length >= 1 && addSucsess === true) {
+    // loadMore.classList.remove('is-hidden');
     Notiflix.Notify.success(
       `Hooray! We found ${pageUrl.data.totalHits} images.`
     );

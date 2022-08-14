@@ -18,7 +18,6 @@ export default class FetchUrl {
       });
       const BASE_URL = 'https://pixabay.com/api/';
       const search = await axios.get(`${BASE_URL}/?${searchParams}`);
-      console.log(search);
 
       this.incrementPage();
       return search;
