@@ -35,7 +35,7 @@ var lightbox = new SimpleLightbox('.gallery a', {
 
 async function onSearch(e) {
   e.preventDefault();
-  document.addEventListener('scroll', debounce(onScroll, 200));
+  document.addEventListener('scroll', debounce(onScroll, 300));
   addSucsess = true;
   fetchUrl.query = e.currentTarget.elements.searchQuery.value.trim();
   if (fetchUrl.query) {
@@ -81,17 +81,17 @@ async function showMarkup() {
 
 function notification(pageUrl) {
   if (pageUrl.data.hits.length === 0 && fetchUrl.page === 2) {
-    return Notiflix.Notify.failure(
+    Notiflix.Notify.failure(
       'Sorry, there are no images matching your search query. Please try again.'
-    );
-  } else if (pageUrl.data.hits.length < 40) {
-    return Notiflix.Notify.info(
-      `We're sorry, but you've reached the end of search results.`
     );
   } else if (pageUrl.data.hits.length >= 1 && addSucsess === true) {
     // loadMore.classList.remove('is-hidden');
     Notiflix.Notify.success(
       `Hooray! We found ${pageUrl.data.totalHits} images.`
+    );
+  } else if (pageUrl.data.hits.length < 40) {
+    Notiflix.Notify.info(
+      `We're sorry, but you've reached the end of search results.`
     );
   }
   addSucsess = false;
