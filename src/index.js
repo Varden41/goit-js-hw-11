@@ -27,6 +27,7 @@ function smoothScroll() {
 
 form.addEventListener('submit', onSearch);
 // loadMore.addEventListener('click', onLoadMore);
+document.addEventListener('scroll', debounce(onScroll, 300));
 
 var lightbox = new SimpleLightbox('.gallery a', {
   captionsData: 'alt',
@@ -35,7 +36,7 @@ var lightbox = new SimpleLightbox('.gallery a', {
 
 async function onSearch(e) {
   e.preventDefault();
-  document.addEventListener('scroll', debounce(onScroll, 300));
+
   addSucsess = true;
   fetchUrl.query = e.currentTarget.elements.searchQuery.value.trim();
   if (fetchUrl.query) {
